@@ -99,7 +99,9 @@ class OpenAINormalizedEvaluator(ToolEvalEvaluator):
         }]
                     
         res = self.opr.request(**completion_kwargs)
-        ret = json.loads(res.choices[0].message.tool_calls[0].function.arguments)
+        choices = res.response['choices']
+        message = choices[0]['message']
+        ret = json.loads(message['tool_calls'][0]['function']['arguments'])
         # check required items
         required_args = getattr(func_description['parameters'],'required',None)
         if required_args is not None:
@@ -109,7 +111,7 @@ class OpenAINormalizedEvaluator(ToolEvalEvaluator):
                     raise KeyError(f"Arg {arg} not found in reply!")
         
         if return_content:
-            ret['content'] = dict(res.choices[0].message).get('content','')
+            ret['content'] = dict(choices[0].message).get('content','')
         return ret
     
     def select_best_final_answer(self,query,final_answers:List[str])->int:

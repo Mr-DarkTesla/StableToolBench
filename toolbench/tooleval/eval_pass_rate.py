@@ -80,8 +80,8 @@ if __name__ == "__main__":
         with ThreadPoolExecutor(args.max_eval_threads) as pool:
             future = []
             for query_id in reference_examples:
-                if str(query_id) not in test_ids:
-                    continue
+                # if str(query_id) not in test_ids:
+                #     continue
                 if query_id in existed_ids:
                     continue
                 for i in range(args.evaluate_times):
